@@ -1,27 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 from cloudinary.models import CloudinaryField
+from .manager import UserManager
+# class UserManager(BaseUserManager):
+#     def create_user(self, username, email, password=None, **extra_fields):
+#         if not email:
+#             raise ValueError("The Email field is required")
+#         if not username:
+#             raise ValueError("The Username field is required")
 
-class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("The Email field is required")
-        if not username:
-            raise ValueError("The Username field is required")
+#         email = self.normalize_email(email)
+#         user = self.model(username=username, email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
 
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+#     def create_superuser(self, username, email, password=None, **extra_fields):
+#         extra_fields.setdefault("is_staff", True)
+#         extra_fields.setdefault("is_superuser", True)
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
+#         return self.create_user(username, email, password, **extra_fields)
 
-        return self.create_user(username, email, password, **extra_fields)
-
-class UserInfo(AbstractBaseUser):
+class UserInfo(AbstractBaseUser,PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
@@ -35,14 +35,17 @@ class UserInfo(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
     objects = UserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD='username'
+    REQUIRED_FIELDS = ['password']
 
     def __str__(self):
-        return self.username
+        return self.email or self.password
+    @property
+    def get_full_name(self):
+        return f"{self.username} - {self.email}"
+    def token(self):
+        pass
 # class UserInfo(models.Model):
 #     username = models.CharField(max_length=255, unique=True)
 #     password = models.CharField(max_length=255)

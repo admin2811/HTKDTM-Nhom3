@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Link , useNavigate } from "react-router-dom";
 
 import axios from "axios";
@@ -44,10 +44,10 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/register", formData);
+      const response = await axios.post("https://serverleaderbroadpostgre.fly.dev/register", formData);
       console.log("Đăng ký thành công:", response.data);
       setErrorMessage("");
-      navigate("/dashboard");  // Chuyển hướng sau khi đăng ký thành công
+      navigate("/login");  // Chuyển hướng sau khi đăng ký thành công
     } catch (error) {
       console.error("Lỗi khi đăng ký:", error.response ? error.response.data : error.message);
 

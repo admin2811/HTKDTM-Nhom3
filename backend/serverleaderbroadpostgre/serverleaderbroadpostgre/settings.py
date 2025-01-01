@@ -13,15 +13,16 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 # import dj_database_url
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -33,6 +34,11 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'serverleaderbroadpostgre.fly.dev']
 CSRF_TRUSTED_ORIGINS = ['https://serverleaderbroadpostgre.fly.dev']
 
 # Application definition
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Mặc định của Django
+]
+
+AUTH_USER_MODEL = "server.UserInfo"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,6 +51,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic', # whitenoise
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'server',
 ]
 
@@ -65,6 +72,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 ROOT_URLCONF = 'serverleaderbroadpostgre.urls'
