@@ -18,27 +18,30 @@ class RecommendCourse:
     def to_lowercase(self, df):
         for column in df.columns:
             if df[column].dtype == 'object':
-                df[column] = df[column].str.lower()
+                df[column] = df[column].astype(str).str.lower()
         return df
     
     def vecterize(self):
         self.courses = self.read_data_train()
 
         self.courses = self.to_lowercase(self.courses)
-        self.user = {
-            "field": [f.lower() for f in self.user ["field"]],
-            "language": [lang.lower() for lang in self.user["language"]],
-            "level": [lvl.lower() for lvl in self.user["level"]],
-            "target": [target.lower() for target in self.user["target"]],
-        }
+
+        self.user = self.to_lowercase(self.user)
 
         self.courses["features"] = self.courses.apply(self.combine_features, axis=1)
 
-        self.user["features"] = " ".join(self.user["field"] + self.user["language"] + self.user["target"] + self.user["level"])
+        self.user["features"] = " ".join(self.user["field"] + " " + self.user["language"] + " " +  self.user["target"] + " " + self.user["level"])
+
+        print(self.courses)
+        print(self.user)
 
         vectorizer = CountVectorizer()
         self.course_vectors = vectorizer.fit_transform(self.courses["features"])
-        self.user_vector = vectorizer.transform([self.user["features"]])
+        self.user_vector = vectorizer.transform(self.user["features"])
+
+        print(self.course_vectors)
+        print(self.user_vector)
+
     def train(self):
         self.vecterize()
 
@@ -48,5 +51,3 @@ class RecommendCourse:
         recommended_courses = self.courses.sort_values(by="similarity", ascending=False)
 
         return (recommended_courses)
-        # print("Recommended Courses:")
-        # print(recommended_courses[["name", "similarity"]])

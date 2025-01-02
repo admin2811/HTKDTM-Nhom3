@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import UserInfo
 from django.contrib.auth.hashers import make_password
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
@@ -18,7 +17,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:

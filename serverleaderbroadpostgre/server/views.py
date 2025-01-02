@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .controller import get_users_data, add_user_data
 from django.views.decorators.csrf import csrf_exempt # type: ignore
+from django.utils.decorators import method_decorator
+from datetime import timedelta
 import json
 from django.core.exceptions import ValidationError
 from .models import Course
@@ -77,6 +79,7 @@ def post_user_data(request):
 
     return JsonResponse({"error": "Phương thức không được hỗ trợ!"}, status=405)
 
+@csrf_exempt
 def read_courses(request):
     user_data = {
         'username': 'Lam',
@@ -92,3 +95,64 @@ def read_courses(request):
     print(recommender.read_data_train())
 
     return HttpResponse('Đọc cái con cặc')
+
+@csrf_exempt
+def create_courses(request):
+    if request.method == "POST":
+        try:
+            # Parse JSON data từ request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            courses = []
+            for item in data:
+                # Chuyển đổi thời lượng từ chuỗi sang timedelta
+                duration_parts = list(map(int, item.get('duration', '00:00:00').split(':')))
+                duration = timedelta(hours=duration_parts[0], minutes=duration_parts[1], seconds=duration_parts[2])
+                
+                course = Course(
+                    course_name=item.get('name'),
+                    description=item.get('description'),
+                    image=item.get('image'),
+                    number_of_lessons=item.get('number_of_lessons'),
+                    price=item.get('price'),
+                    field=item.get('field'),
+                    language=item.get('language'),
+                    level=item.get('level'),
+                    duration=duration,
+                )
+                courses.append(course)
+            
+            # Bulk create
+            Course.objects.bulk_create(courses)
+            
+            return JsonResponse({'message': 'Courses created successfully', 'count': len(courses)}, status=201)
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid HTTP method'}, status=405)
+
+@csrf_exempt
+def recommended_courses(request):
+    if request.method == "POST":
+        try:
+            user = json.loads(request.body.decode('utf-8'))
+            
+            user = pd.DataFrame([user])
+
+            user.astype(str)
+
+            recommender = RecommendCourse(user)
+
+            recommended_list = recommender.train()
+
+            recommended_list = recommended_list[['id', 'course_name', 'similarity']]
+
+            recommended_list = recommended_list.to_json(orient='records')
+
+            return JsonResponse({'message': 'Recommended course', "data": recommended_list}, status=201)
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid HTTP method'}, status=405)

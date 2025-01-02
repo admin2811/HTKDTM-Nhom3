@@ -10,4 +10,6 @@ urlpatterns = [
     path('register', RegisterView.as_view(), name="register"),
     path('login', LoginView.as_view(), name="login"),
     path('api/test/read_data_train', views.read_courses, name="read_course"),
+    path('api/add_courses/', views.create_courses, name='create_course'),
+    path('api/recommended_course/', views.recommended_courses, name='recommended_course'),
 ]
