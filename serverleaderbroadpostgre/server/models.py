@@ -73,6 +73,7 @@ class Course(models.Model):
     language = models.CharField(max_length=255)
     level = models.CharField(max_length=255)
     duration = models.DurationField()
+    standard = models.CharField(max_length=255)
     
     def __str__(self):
         return self.course_name

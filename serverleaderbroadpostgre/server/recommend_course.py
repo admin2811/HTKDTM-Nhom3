@@ -11,6 +11,8 @@ class RecommendCourse:
 
         self.courses = pd.DataFrame(list(self.courses))
 
+        print(self.courses)
+
         return self.courses
     def combine_features(self, row):
         return f"{row['field']} {row['language']} {row['level']}"
@@ -31,9 +33,6 @@ class RecommendCourse:
         self.courses["features"] = self.courses.apply(self.combine_features, axis=1)
 
         self.user["features"] = " ".join(self.user["field"] + " " + self.user["language"] + " " +  self.user["target"] + " " + self.user["level"])
-
-        print(self.courses)
-        print(self.user)
 
         vectorizer = CountVectorizer()
         self.course_vectors = vectorizer.fit_transform(self.courses["features"])

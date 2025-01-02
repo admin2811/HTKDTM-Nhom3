@@ -146,8 +146,6 @@ def recommended_courses(request):
 
             recommended_list = recommender.train()
 
-            recommended_list = recommended_list[['id', 'course_name', 'similarity']]
-
             recommended_list = recommended_list.to_json(orient='records')
 
             return JsonResponse({'message': 'Recommended course', "data": recommended_list}, status=201)
