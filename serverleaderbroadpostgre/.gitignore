@@ -3,3 +3,4 @@
 # Pyre type checker
 tmp
 *.sqlite3
+.venv
