@@ -30,3 +30,29 @@
     margin-bottom: 15px;
   }
   
+.home .coursecard{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.home .catalog-title {
+  font-size: 16px;
+  font-style:oblique;
+  margin: 8px;
+  color: black;
+}
+
+.slider-section {
+  width: 100%;
+  height: 400px; /* Chiều cao slider */
+  margin-bottom: 20px; /* Khoảng cách với các phần khác */
+  padding: 8px;
+}
+
+.slider-section div {
+  border-radius: 10px;
+  overflow: hidden;
+}

@@ -8,8 +8,10 @@ import Register from './pages/Register'
 import Aos from 'aos'
 import 'aos/dist/aos.css';
 import Dashboard from './pages/Dashboard'
-import Home from './components/dashboard/Home'
-import Course from './components/dashboard/Course'
+import Home from './components/dashboard/Home/Home'
+import CourseCard from './components/dashboard/Home/CourseCard'
+import Community from './components/dashboard/Community/Community'
+import Profile from './components/dashboard/Profile/Profile'
 
 function App() {
   useEffect(() => {
@@ -40,11 +42,14 @@ function App() {
       errorElement: <div>Trang không tìm thấy</div>,
       children:[
         {index: true, element: <Home />},
-        {path: "road", element: <Course />}
-        // {path:"/course", element: <Course/>}
+        {path: "road", element: <CourseCard />},
+        {path:"community", element: <Community/>},
+        {path:"profile", element: <Profile/>},
       ]
     }
   ])
+
+  
   return (
     <ErrorBoundary>
         <main className=" bg-white text-dark">

@@ -1,0 +1,160 @@
+.profile-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.profile-page .container-profile {
+  flex: 6;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-y: auto;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-content {
+  display: flex;
+  gap: 20px;
+}
+
+.profile-left,
+.profile-right {
+  flex: 1;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+.profile-field input {
+  padding: 10px;
+  width: calc(100% - 50px); /* Giảm chiều rộng input để có chỗ cho icon */
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.profile-field p {
+  font-size: 16px;
+}
+
+.profile-field svg {
+  cursor: pointer;
+  font-size: 20px;
+  color: #FF8652;
+  margin-left: 10px; /* Căn chỉnh icon sang bên phải */
+}
+
+.profile-field .icon-profile{
+  margin-right: 8px;
+  
+}
+
+.profile-field svg:hover {
+  color: #FF8652;
+}
+
+.course-list {
+  list-style: none;
+  padding: 0;
+}
+
+.course-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.course-video {
+  margin-top: 20px;
+}
+
+.course-video iframe {
+  width: 100%;
+  height: 315px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    flex-direction: column;
+  }
+
+  .profile-page .container-profile {
+    margin-left: 0;
+    flex: 1;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-avatar {
+    margin-bottom: 10px;
+  }
+
+  .profile-name h2 {
+    font-size: 20px;
+  }
+
+  .profile-content {
+    flex-direction: column;
+  }
+
+  .profile-left,
+  .profile-right {
+    flex: none;
+    width: 100%;
+  }
+}
+
+  .profile-field .rd{
+    display: flex;
+    margin-left: auto;
+    
+  }
+
+  .profile-field .rd .icon-rd{
+    color: #FF8652;
+  }

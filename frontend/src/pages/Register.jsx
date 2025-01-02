@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import React, { useState } from "react";
 import { Link , useNavigate } from "react-router-dom";
 
 import axios from "axios";
@@ -10,10 +10,11 @@ const Register = () => {
     password: "",
     field: "",
     language: "",
-    target: "",
+    goal: "",
     level: "",
-    time_study: "",
+    time: "",
   });
+
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -44,10 +45,10 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("https://serverleaderbroadpostgre.fly.dev/register", formData);
-      console.log("Đăng ký thành công:", response.data);
+      // const response = await axios.post("http://localhost:4000/adduser", formData);
+      // console.log("Đăng ký thành công:", response.data);
       setErrorMessage("");
-      navigate("/login");  // Chuyển hướng sau khi đăng ký thành công
+      navigate("/dashboard");  // Chuyển hướng sau khi đăng ký thành công
     } catch (error) {
       console.error("Lỗi khi đăng ký:", error.response ? error.response.data : error.message);
 
@@ -71,12 +72,12 @@ const Register = () => {
             {errorMessage}
           </div>
         )}
-        
+      
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
-              placeholder="User Name"
+              placeholder="Tên đăng nhập"
               name="username"
               value={formData.username}
               onChange={handleChange}
@@ -98,7 +99,7 @@ const Register = () => {
           <div>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Mật khẩu"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -106,6 +107,7 @@ const Register = () => {
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
+          
           {/* Lĩnh vực */}
           <div className="mb-4">
             <label htmlFor="field" className="block text-gray-700 font-semibold mb-2">
@@ -186,9 +188,9 @@ const Register = () => {
             </label>
             <div className="relative">
               <select
-                id="target"
-                name="target"
-                value={formData.target}
+                id="goal"
+                name="goal"
+                value={formData.goal}
                 onChange={handleChange}
                 className="appearance-none border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-accent"
                 required
@@ -260,9 +262,9 @@ const Register = () => {
             </label>
             <div className="relative">
               <select
-                id="time_study"
-                name="time_study"
-                value={formData.time_study}
+                id="duration"
+                name="duration"
+                value={formData.duration}
                 onChange={handleChange}
                 className="appearance-none border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-accent"
                 required
@@ -288,9 +290,11 @@ const Register = () => {
               </svg>
             </div>
           </div>
+
+
           <div>
             <button
-              type="submit"
+              type="submit" 
               className="w-full py-3 bg-accent text-white rounded-md hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent-dark"
             >
               Đăng Ký

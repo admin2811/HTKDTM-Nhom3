@@ -1,0 +1,126 @@
+/* Layout cho toàn bộ trang cộng đồng */
+.community {
+    display: flex;
+    width: 100vw; /* Chiếm toàn bộ chiều rộng màn hình */
+    height: 100vh; /* Chiều cao đầy đủ màn hình */
+  }
+  
+  .community .container-community {
+    flex: 6; /* Tương tự như trang home, phần chính chiếm toàn bộ không gian còn lại */
+  }
+  
+  .community .container-community .postes{
+    padding: 20px;
+    overflow-y: auto;
+  }
+  /* Tiêu đề trang cộng đồng */
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Cấu trúc của các bài đăng (posts) */
+  .post {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .post-content {
+    margin-top: 10px;
+    color: #555;
+    font-size: 16px;
+  }
+  
+  /* Các hành động cho bài đăng (reactions, comment) */
+  .post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .reactions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #777;
+    transition: color 0.3s ease;
+  }
+  
+  .reactions button:hover {
+    color: #007bff;
+  }
+  
+  /* Form nhập bình luận */
+  .comment-form {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .comment-form input {
+    flex: 1;
+    padding: 8px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .comment-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .comment-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Hiển thị bình luận */
+  .comments {
+    margin-top: 10px;
+  }
+  
+  .comment {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  /* Comment input placeholder */
+  .comment-form input::placeholder {
+    color: #aaa;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .community {
+      flex-direction: column;
+    }
+  
+    .community .container-community {
+      margin-left: 0;
+      flex: 1;
+    }
+  
+    h1 {
+      font-size: 20px;
+    }
+  }
+  

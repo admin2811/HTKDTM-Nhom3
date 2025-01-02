@@ -5,6 +5,8 @@
     align-items: center;
     font-size: 14px;
     color: #555;
+    max-height: 50px;
+    min-height: 50px;
   }
   
   .navbar .wrapper {

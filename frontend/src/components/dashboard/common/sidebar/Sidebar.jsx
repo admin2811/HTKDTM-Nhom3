@@ -16,10 +16,11 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   // const { dispatch } = useContext(DarkModeContext);
   return (
+    
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">Nhóm 3</span>
+          <span className="logo">Nhóm 4</span>
         </Link>
       </div>
       <hr />
@@ -29,7 +30,7 @@ const Sidebar = () => {
           <Link to="/dashboard" style={{ textDecoration: "none" }}>
           <li>
             <DashboardIcon className="icon" />
-            <span>Course</span>
+            <span>Trang chủ</span>
           </li>
           </Link>
           <Link to="/dashboard/road" style={{ textDecoration: "none" }}>
@@ -38,10 +39,10 @@ const Sidebar = () => {
               <span>Road</span>
             </li>
           </Link>
-          <Link to="/post" style={{ textDecoration: "none" }}>
+          <Link to="/dashboard/community" style={{ textDecoration: "none" }}>
             <li>
               <FeedOutlinedIcon className="icon" />
-              <span>Community</span>
+              <span>Cộng đồng</span>
             </li>
           </Link>
           <p className="title">USEFUL</p>
@@ -51,7 +52,7 @@ const Sidebar = () => {
           </li>
           <li>
             <NotificationsNoneIcon className="icon" />
-            <span>Notifications</span>
+            <span>Thông báo</span>
           </li>
           <p className="title">SERVICE</p>
           <li>
@@ -67,13 +68,17 @@ const Sidebar = () => {
             <span>Settings</span>
           </li>
           <p className="title">USER</p>
-          <li>
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
+
+          <Link to="/dashboard/profile" style={{ textDecoration: "none" }}>
+            <li>
+              <AccountCircleOutlinedIcon className="icon" />
+              <span>Trang cá nhân</span>
+            </li>
+          </Link>
+
           <li>
             <ExitToAppIcon className="icon" />
-            <span>Logout</span>
+            <span>Đăng xuất</span>
           </li>
         </ul>
       </div>
