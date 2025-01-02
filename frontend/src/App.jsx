@@ -10,6 +10,8 @@ import 'aos/dist/aos.css';
 import Dashboard from './pages/Dashboard'
 import Home from './components/dashboard/Home'
 import Course from './components/dashboard/Course'
+import PrivateRoute from './components/PrivateRoute'
+import PasswordResetRequest from './pages/ForgotPassword'
 
 function App() {
   useEffect(() => {
@@ -35,8 +37,13 @@ function App() {
       errorElement: <div>Trang không tìm thấy</div> 
     },
     {
+      path: '/forgot_password',
+      element: <PasswordResetRequest />,
+      errorElement: <div>Trang không tìm thấy</div>
+    },
+    {
       path:'/dashboard',
-      element: <Dashboard />,
+      element: <PrivateRoute><Dashboard /></PrivateRoute>,
       errorElement: <div>Trang không tìm thấy</div>,
       children:[
         {index: true, element: <Home />},

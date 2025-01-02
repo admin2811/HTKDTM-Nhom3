@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 from cloudinary.models import CloudinaryField
-from .manager import UserManager
+from server.manager import UserManager
+from rest_framework_simplejwt.tokens import RefreshToken
+
 # class UserManager(BaseUserManager):
 #     def create_user(self, username, email, password=None, **extra_fields):
 #         if not email:
@@ -39,13 +41,18 @@ class UserInfo(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD='username'
     REQUIRED_FIELDS = ['password']
 
+    def tokens(self):    
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh":str(refresh),
+            "access":str(refresh.access_token)
+        }
+
     def __str__(self):
-        return self.email or self.password
+        return self.username or self.password
     @property
     def get_full_name(self):
         return f"{self.username} - {self.email}"
-    def token(self):
-        pass
 # class UserInfo(models.Model):
 #     username = models.CharField(max_length=255, unique=True)
 #     password = models.CharField(max_length=255)

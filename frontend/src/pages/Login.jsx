@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -17,7 +17,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.username || !formData.password) {
       setErrorMessage("Vui lòng điền đầy đủ thông tin!");
       return;
@@ -25,9 +24,13 @@ const Login = () => {
 
     try {
       const response = await axios.post("https://serverleaderbroadpostgre.fly.dev/login", formData);  
-      console.log("Đăng nhập thành công:", response.data);
+      console.log(response);
+      //console.log("Đăng nhập thành công:", response.data);
       setErrorMessage(""); // Xóa thông báo lỗi nếu đăng nhập thành công
-      navigate("/dashboard"); // Chuyển hướng đến trang dashboard
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Lỗi khi đăng nhập:", error.response ? error.response.data : error.message);
 
@@ -74,6 +77,7 @@ const Login = () => {
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
+          <Link to='/forgot_password' className="py-2 text-accent mt-5">Forgot Password?</Link>
           <div>
             <button
               type="submit"

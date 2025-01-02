@@ -1,9 +1,7 @@
 from rest_framework import serializers
-from .models import UserInfo
-from django.contrib.auth.hashers import make_password
+from server.models import UserInfo
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 class UserRegisterSerializer(serializers.ModelSerializer):
     password=serializers.CharField(max_length=255, min_length=6, write_only=True)
     class Meta:
@@ -18,7 +16,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user=UserInfo.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            password=make_password(validated_data['password']),
+            password=validated_data['password'],
             field=validated_data['field'],
             language=validated_data['language'],
             target=validated_data['target'],
@@ -28,19 +26,22 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.Serializer):
     username=serializers.CharField(max_length=255)
+    field = serializers.CharField(max_length=255, read_only=True)
+    language = serializers.CharField(max_length=255, read_only=True)
+    level = serializers.CharField(max_length=255, read_only=True)
     password=serializers.CharField(max_length=255, min_length=6, write_only=True)
     access_token=serializers.CharField(max_length=255, read_only=True)
     refresh_token=serializers.CharField(max_length=255, read_only=True)
     class Meta:
         model=UserInfo
-        fields=['username', 'password', 'access_token', 'refresh_token']
+        fields=['username', 'password', 'access_token', 'refresh_token', 'field', 'language','level']
     def validate(self, attrs):
         password=attrs.get('password')
         username=attrs.get('username')
         request=self.context.get('request')
-        print(password, request)
+        print(username,password, request)
         user=authenticate(request, username=username, password=password)
         print(user)
         if not user:
@@ -51,9 +52,13 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return {
             'username':user.username,
             'full_name':user.get_full_name,
+            'field': user.field,
+            'language':user.language,
+            'level':user.level,
             "access_token":str(tokens.get('access')),
             "refresh_token":str(tokens.get('refresh'))
         }
+
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
