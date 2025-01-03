@@ -1,7 +1,7 @@
 import React from 'react'
 import "./coursecard.css"
-import { IoIosPeople } from "react-icons/io";
 import { CiClock2 } from "react-icons/ci";
+import { RiBookShelfLine } from "react-icons/ri";
 
 function CourseCard(props) {
   return (
@@ -12,9 +12,9 @@ function CourseCard(props) {
             <p className='title'>{props.title}</p>
             <p className="price"><span>{props.price}</span>{props.discount_price}</p>
             <div className='detail-course'>
-              <div className='number-of-member'>
-                <IoIosPeople className='icon'/>
-                <p className='number'>{props.number_of_member}</p>
+              <div className='number-of-lessions'>
+                <RiBookShelfLine className='icon'/>
+                <p className='number'>{props.number_of_lessions}</p>
               </div>
               <div className='total-time'>
                 <CiClock2 className='icon'/>

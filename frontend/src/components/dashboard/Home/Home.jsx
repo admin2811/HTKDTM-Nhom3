@@ -40,7 +40,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000đ"
                   discount_price="1.000.000đ"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -48,7 +48,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -56,7 +56,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -64,7 +64,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
               </div>
@@ -77,7 +77,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000đ"
                   discount_price="1.000.000đ"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -85,7 +85,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -93,7 +93,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
                 <CourseCard
@@ -101,7 +101,7 @@ const Home = () => {
                   title="Kiến thức nền tảng"
                   price="1.250.000"
                   discount_price="1.000.000"
-                  number_of_member="123.456"
+                  number_of_lessions="10"
                   total_time="1h33p"
                 />
               </div>
