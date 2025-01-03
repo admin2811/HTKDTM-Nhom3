@@ -1,0 +1,11 @@
+
+
+# Pyre type checker
+tmp
+*.sqlite3
+Dockerfile
+fly.toml
+tmp
+.dockerignore
+.codegpt
+.venv
