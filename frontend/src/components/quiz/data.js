@@ -1,0 +1,42 @@
+export const data = [
+    {
+        question: "abc>",
+        option1: "A",
+        option2: "B",
+        option3: "C",
+        option4: "D",
+        ans: 1,
+    },
+    {
+        question: "abc>",
+        option1: "A",
+        option2: "B",
+        option3: "C",
+        option4: "D",
+        ans: 2,
+    },
+    {
+        question: "abc>",
+        option1: "A",
+        option2: "B",
+        option3: "C",
+        option4: "D",
+        ans: 3,
+    },
+    {
+        question: "abc>",
+        option1: "A",
+        option2: "B",
+        option3: "C",
+        option4: "D",
+        ans: 4,
+    },
+    {
+        question: "abc>",
+        option1: "A",
+        option2: "B",
+        option3: "C",
+        option4: "D",
+        ans: 1,
+    },
+];
