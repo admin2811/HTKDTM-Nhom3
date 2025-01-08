@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { PlusSquare } from 'lucide-react'
 import { useState,useEffect } from 'react'
 import FormUser from './FormRoute';

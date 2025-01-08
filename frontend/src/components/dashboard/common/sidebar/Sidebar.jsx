@@ -40,7 +40,7 @@ const Sidebar = () => {
               <span>Road</span>
             </li>
           </Link>
-          <Link to="/post" style={{ textDecoration: "none" }}>
+          <Link to="/dashboard/community" style={{ textDecoration: "none" }}>
             <li>
               <FeedOutlinedIcon className="icon" />
               <span>Community</span>
@@ -52,15 +52,19 @@ const Sidebar = () => {
             <span>Notifications</span>
           </li>
           <p className="title">SERVICE</p>
+            <Link to = "https://gemini-cum3-nhom4.onrender.com/" style={{ textDecoration: "none" }} target="_blank">
             <li>
               <ForumIcon className="icon" />
               <span>Chat bot</span>
             </li>
+            </Link>
           <p className="title">USER</p>
+          <Link to="/dashboard/profile" style={{ textDecoration: "none" }}>
           <li>
             <AccountCircleOutlinedIcon className="icon" />
             <span>Profile</span>
           </li>
+          </Link>
           <li onClick={handleLogout}>
             <ExitToAppIcon className="icon" />
             <span>Logout</span>

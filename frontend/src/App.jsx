@@ -18,6 +18,8 @@ import FrontendDetails from './components/dashboard/popularRoute/FrontendDetails
 import BackendDetails from './components/dashboard/popularRoute/BackendDetails'
 import RoutePerson from './components/dashboard/routePerson/RoutePerson'
 import AICreateRoute from './components/dashboard/routePerson/routerAI/AICreateRoute'
+import Community from './components/dashboard/Community/Community'
+import Profile from './components/dashboard/Profile/Profle'
 function App() {
   useEffect(() => {
     Aos.init({
@@ -67,6 +69,8 @@ function App() {
         {path: "quizz/:id", element: <Quiz />},
         {path: "road/frontend-details", element: <FrontendDetails />},
         {path: "road/backend-details", element: <BackendDetails />},
+        {path: "community", element: <Community />},
+        {path: "profile", element: <Profile />}
         // {path:"/course", element: <Course/>}
       ]
     }

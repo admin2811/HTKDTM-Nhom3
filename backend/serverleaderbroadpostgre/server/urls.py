@@ -19,4 +19,5 @@ urlpatterns = [
     path('lessons/<int:course_id>/', views.lessons_of_course, name='lessons_of_course'),
     path('api/', include(router.urls)),
     path('api/predict-learning-path/', PredictLearningPath.as_view(), name='predict_learning_path'),
+    path('quizz/<int:lesson_id>/', views.quizz_of_lesson, name='quizz_of_lesson'),
 ]

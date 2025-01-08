@@ -4,7 +4,7 @@ from .controller import get_users_data, add_user_data, predict_learning_path
 from django.views.decorators.csrf import csrf_exempt # type: ignore
 import json
 from django.core.exceptions import ValidationError
-from .models import Course
+from .models import Course, Quizz
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -236,3 +236,9 @@ def lessons_of_course(request, course_id):
         lessons = Lesson.objects.filter(id_course_id=course_id)
         lessons_data = list(lessons.values())
         return JsonResponse({'lessons': lessons_data}, safe=False)
+@csrf_exempt
+def quizz_of_lesson(request, lesson_id):
+    if request.method == "GET":
+        quizz = Quizz.objects.filter(id_lesson_id=lesson_id)
+        quizz_data = list(quizz.values())
+        return JsonResponse({'quizz': quizz_data}, safe=False)
