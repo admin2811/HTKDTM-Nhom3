@@ -21,18 +21,27 @@ function Quiz() {
     let option_array = [Option1, Option2, Option3, Option4];
 
     const checkAns = (e, ans) => {
-        if (lock === false) {
+        if (!lock) {
+            const savedData = JSON.parse(localStorage.getItem("quizResult")) || { id_course: question.id_course };
+
             // So sánh đáp án người dùng chọn với đáp án đúng (cả hai đều là chuỗi)
             if (question.ans === ans) {
                 e.target.classList.add("correct");
                 setLock(true);
                 setScore(prev => prev + 1);  // Tăng điểm khi trả lời đúng
+                savedData[index + 1] = "correct"; // Lưu kết quả đúng
             } else {
                 e.target.classList.add("wrong");
+                savedData[index + 1] = "wrong"; // Lưu kết quả sai
                 setLock(true);
                 // Tìm phần tử chứa câu trả lời đúng và thêm class 'correct' cho nó
-                option_array.find(option => option.current.textContent === question.ans).current.classList.add("correct");
+                // option_array.find(option => option.current.textContent === question.ans).current.classList.add("correct");
+                option_array[question.ans.charCodeAt(0) - 65].current.classList.add("correct");
             }
+
+            // Lưu dữ liệu cập nhật vào localStorage
+            localStorage.setItem("quizResult", JSON.stringify(savedData));
+            console.log("Kết quả hiện tại trong localStorage:", savedData);
         }
     }
     
@@ -61,6 +70,7 @@ function Quiz() {
         setScore(0);
         setLock(false);
         setResult(false);
+        localStorage.removeItem("quizResult"); // Xóa dữ liệu kết quả trong localStorage
     }
 
     const back = () => {
