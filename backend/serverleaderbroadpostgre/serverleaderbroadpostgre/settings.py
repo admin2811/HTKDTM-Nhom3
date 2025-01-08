@@ -23,7 +23,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent# No code was selected, so we will add a new section to improve the code
 
 # Security Improvements
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_HSTS_SECONDS = 3600
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True

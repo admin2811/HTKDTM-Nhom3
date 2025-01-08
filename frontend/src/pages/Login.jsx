@@ -30,6 +30,7 @@ const Login = () => {
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("refresh_token", response.data.refresh_token);
+      localStorage.setItem("data", JSON.stringify(response.data));
       navigate("/dashboard");
     } catch (error) {
       console.error("Lỗi khi đăng nhập:", error.response ? error.response.data : error.message);

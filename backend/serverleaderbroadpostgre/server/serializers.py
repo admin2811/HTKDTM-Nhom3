@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from server.models import UserInfo
+from server.models import UserInfo, Router
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -64,3 +64,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ['id', 'username', 'email', 'image', 'date', 'courses', 'target', 'study']
+
+class RouterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Router
+        fields = ['id', 'name', 'content']

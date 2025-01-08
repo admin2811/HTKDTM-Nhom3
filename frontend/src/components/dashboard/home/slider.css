@@ -1,0 +1,71 @@
+/* slider.css */
+
+/* Slider container */
+.slider-section {
+    width: 100%;
+    height: 220px; /* Tăng chiều cao để phù hợp với ảnh */
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  /* Slide styles */
+  .slider-section .slide {
+    transition: transform ease-in-out 0.24s; /* Chuyển động mượt */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Arrow styles */
+  .slider-section .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: white;
+    z-index: 2;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .slider-section .arrow:hover {
+    color: #fff; /* Hiệu ứng khi hover */
+  }
+  
+  .slider-section .arrow.left {
+    left: 20px;
+  }
+  
+  .slider-section .arrow.right {
+    right: 20px;
+  }
+  
+  /* Dots */
+  .slider-section .dots {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+  }
+  
+  .slider-section .dot {
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .slider-section .dot.active {
+    background-color: #fff; /* Đổi màu cho dot được chọn */
+  }
+  

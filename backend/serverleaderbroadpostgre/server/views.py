@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .controller import get_users_data, add_user_data
+from .controller import get_users_data, add_user_data, predict_learning_path
 from django.views.decorators.csrf import csrf_exempt # type: ignore
 import json
 from django.core.exceptions import ValidationError
@@ -15,12 +15,18 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from server.models import UserInfo
 from django.utils.encoding import smart_bytes,smart_str
-from .serializers import UserRegisterSerializer, UserLoginSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, RouterSerializer
+from .recommend_course import RecommendCourse
+import pandas as pd
+from datetime import timedelta
+import json
+from .models import Course, Lesson, Router
+
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserRegisterSerializer(data=request.data)
@@ -83,6 +89,36 @@ class PasswordResetConfirmView(APIView):
         except Exception:
             return Response({'error': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 # Create your views here.
+class RouterViewSet(viewsets.ModelViewSet):
+    queryset = Router.objects.all()
+    serializer_class = RouterSerializer
+
+class PredictLearningPath(APIView):
+    def post(self, request):
+        try:
+            # Lấy dữ liệu từ request
+            features = {
+                'Mục tiêu chính khi học lập trình': request.data.get('target'),
+                'Dự định làm dự án cá nhân': request.data.get('personal'),
+                'Kinh nghiệm lập trình': request.data.get('experience'),
+                'Ngôn ngữ lập trình đã học': request.data.get('language'),
+                'Thời gian muốn hoàn thành lộ trình': request.data.get('study')
+            }
+
+            # Kiểm tra dữ liệu đầu vào
+            if not all(features.values()):
+                return Response({"error": "Thiếu dữ liệu đầu vào."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Gọi hàm trong controller để dự đoán
+            result = predict_learning_path(features)
+
+            if "error" in result:
+                return Response({"error": result["error"]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response(result, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 def home(request):
     return HttpResponse('Welcome to server postgreSQL')
 
@@ -118,3 +154,85 @@ def post_user_data(request):
             return JsonResponse({"error": f"Có lỗi xảy ra: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Phương thức không được hỗ trợ!"}, status=405)
+
+@csrf_exempt
+def read_courses(request):
+    user_data = {
+        'username': 'Lam',
+        'field': 'Data Science',
+        'language': 'Python',
+        'target': 'Machine Learning',
+        'level': 'Intermediate'
+    }
+
+    user_data = pd.DataFrame([user_data])
+
+    recommender = RecommendCourse(user_data)
+    print(recommender.read_data_train())
+
+    return HttpResponse('Đọc cái con cặc')
+@csrf_exempt
+def create_courses(request):
+    if request.method == "POST":
+        try:
+            # Parse JSON data từ request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            courses = []
+            for item in data:
+                # Chuyển đổi thời lượng từ chuỗi sang timedelta
+                duration_parts = list(map(int, item.get('duration', '00:00:00').split(':')))
+                duration = timedelta(hours=duration_parts[0], minutes=duration_parts[1], seconds=duration_parts[2])
+                
+                course = Course(
+                    course_name=item.get('name'),
+                    description=item.get('description'),
+                    image=item.get('image'),
+                    number_of_lessons=item.get('number_of_lessons'),
+                    price=item.get('price'),
+                    field=item.get('field'),
+                    language=item.get('language'),
+                    level=item.get('level'),
+                    duration=duration,
+                )
+                courses.append(course)
+            
+            # Bulk create
+            Course.objects.bulk_create(courses)
+            
+            return JsonResponse({'message': 'Courses created successfully', 'count': len(courses)}, status=201)
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid HTTP method'}, status=405)
+
+@csrf_exempt
+def recommended_courses(request):
+    if request.method == "POST":
+        try:
+            user = json.loads(request.body.decode('utf-8'))
+            
+            user = pd.DataFrame([user])
+
+            user.astype(str)
+
+            recommender = RecommendCourse(user)
+
+            recommended_list = recommender.train()
+
+            recommended_list = recommended_list.to_json(orient='records')
+
+            return JsonResponse({'message': 'Recommended course', "data": recommended_list}, status=201)
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Invalid HTTP method'}, status=405)
+
+@csrf_exempt
+def lessons_of_course(request, course_id):
+    if request.method == "GET":
+        lessons = Lesson.objects.filter(id_course_id=course_id)
+        lessons_data = list(lessons.values())
+        return JsonResponse({'lessons': lessons_data}, safe=False)
