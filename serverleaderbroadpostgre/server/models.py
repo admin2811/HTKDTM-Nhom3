@@ -1,27 +1,29 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 from cloudinary.models import CloudinaryField
+from server.manager import UserManager
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("The Email field is required")
-        if not username:
-            raise ValueError("The Username field is required")
+# class UserManager(BaseUserManager):
+#     def create_user(self, username, email, password=None, **extra_fields):
+#         if not email:
+#             raise ValueError("The Email field is required")
+#         if not username:
+#             raise ValueError("The Username field is required")
 
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+#         email = self.normalize_email(email)
+#         user = self.model(username=username, email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
+#     def create_superuser(self, username, email, password=None, **extra_fields):
+#         extra_fields.setdefault("is_staff", True)
+#         extra_fields.setdefault("is_superuser", True)
 
-        return self.create_user(username, email, password, **extra_fields)
+#         return self.create_user(username, email, password, **extra_fields)
 
-class UserInfo(AbstractBaseUser):
+class UserInfo(AbstractBaseUser,PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
@@ -35,15 +37,22 @@ class UserInfo(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
     objects = UserManager()
+    USERNAME_FIELD='username'
+    REQUIRED_FIELDS = ['password']
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    def tokens(self):    
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh":str(refresh),
+            "access":str(refresh.access_token)
+        }
 
     def __str__(self):
-        return self.username
-    
+        return self.username or self.password
+    @property
+    def get_full_name(self):
+        return f"{self.username} - {self.email}"
 # class UserInfo(models.Model):
 #     username = models.CharField(max_length=255, unique=True)
 #     password = models.CharField(max_length=255)
@@ -74,6 +83,44 @@ class Course(models.Model):
     level = models.CharField(max_length=255)
     duration = models.DurationField()
     standard = models.CharField(max_length=255)
+    total_enrollments = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.course_name
+    
+class UserCourse(models.Model):
+    user = models.ForeignKey('UserInfo', on_delete=models.CASCADE, related_name='user_courses')
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='user_courses')
+    result = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    enrolled_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.course.course_name} - {self.result}"
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    videoId = models.CharField(max_length=255)
+    id_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
+
+    def __str__(self):
+        return self.title
+
+class Router(models.Model):
+    name = models.CharField(max_length=255)
+    content = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class Quizz(models.Model):
+    question = models.TextField()
+    option1 = models.TextField()
+    option2 = models.TextField()
+    option3 = models.TextField()
+    option4 = models.TextField()
+    ans = models.TextField()
+    id_lesson = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='quizzes')
+
+    def __str__(self):
+        return self.question

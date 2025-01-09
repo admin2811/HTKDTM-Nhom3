@@ -32,7 +32,7 @@ class RecommendCourse:
 
         self.courses["features"] = self.courses.apply(self.combine_features, axis=1)
 
-        self.user["features"] = " ".join(self.user["field"] + " " + self.user["language"] + " " +  self.user["target"] + " " + self.user["level"])
+        self.user["features"] = " ".join(self.user["field"] + " " + self.user["language"] + " " + self.user["level"])
 
         vectorizer = CountVectorizer()
         self.course_vectors = vectorizer.fit_transform(self.courses["features"])
