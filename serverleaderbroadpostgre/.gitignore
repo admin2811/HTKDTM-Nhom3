@@ -4,4 +4,4 @@
 tmp
 *.sqlite3
 .venv
-.google_read_data.py
+server/google_read_data.py
