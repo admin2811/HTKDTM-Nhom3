@@ -12,6 +12,7 @@ import Home from './components/dashboard/Home/Home'
 import CourseCard from './components/dashboard/Home/CourseCard'
 import Community from './components/dashboard/Community/Community'
 import Profile from './components/dashboard/Profile/Profile'
+import Road from './components/dashboard/Road/Road'
 
 function App() {
   useEffect(() => {
@@ -42,7 +43,7 @@ function App() {
       errorElement: <div>Trang không tìm thấy</div>,
       children:[
         {index: true, element: <Home />},
-        {path: "road", element: <CourseCard />},
+        {path: "road", element: <Road />},
         {path:"community", element: <Community/>},
         {path:"profile", element: <Profile/>},
       ]
