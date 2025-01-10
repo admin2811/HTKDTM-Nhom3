@@ -1,0 +1,68 @@
+
+/* Layout cho toàn bộ trang cộng đồng */
+.community {
+    display: flex;
+     /* Chiều cao đầy đủ màn hình */
+  }
+  
+  /* Container chính của cộng đồng */
+  .community .container-community {
+    flex: 6; /* Tương tự như trang home, phần chính chiếm toàn bộ không gian còn lại */
+  }
+  
+  /* Phần bài viết trong cộng đồng */
+  .community .container-community .postes {
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  /* Tiêu đề trang cộng đồng */
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .community {
+      flex-direction: column;
+    }
+  
+    .community .container-community {
+      margin-left: 0;
+      flex: 1;
+    }
+  }
+  
+  /* Thêm hỗ trợ cho Forced Colors Mode */
+  @media (forced-colors: active) {
+    .community, .community .container-community, .community .container-community .postes, h1 {
+      background-color: black; /* Đặt màu nền đen */
+      color: white; /* Đặt màu chữ trắng */
+    }
+  
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+  
+.fb-posts-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Đảm bảo các bài viết chiếm hết chiều rộng của container */
+    margin: 0 auto;
+    width: 100%; /* Đảm bảo container chiếm hết chiều rộng */
+  }
+  
+.fb-post {
+    width: 100%; 
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 10px;
+  }

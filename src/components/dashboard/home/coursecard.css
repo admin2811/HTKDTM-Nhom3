@@ -1,0 +1,89 @@
+.coursecard .courseBox {
+    width: 230px;
+    overflow: hidden;
+    max-height: 280px;
+    /* padding: 10px; */
+    background-color: #fff;
+    border-radius: 10px 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .coursecard .courseBox img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .coursecard .description{
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .coursecard .description .title {
+    color: black;
+    font-size: 14px;
+    margin: 0px;
+  }
+
+  .coursecard .price {
+    margin-top: 0px;
+    color: #ff7235;
+    font-weight: bold;
+  }
+
+  .coursecard span{
+    font-size: 13px;
+    text-decoration: line-through;
+    margin-right: 6px;
+    color: #ccc;
+  }
+
+  .coursecard .description .btn-learn {
+    outline: none;
+    border: 1px solid #ff7235;
+    padding: 4px 60px;
+    border-radius: 10px;
+    background: none;
+    color: #ff7235;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .3s linear; 
+  }
+
+  .coursecard .description .btn-learn:hover{
+    background: #ff7235 ;
+    color: #fff;
+  }
+
+  .coursecard .detail-course {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    gap: 20px;
+  }
+
+  .icon{
+    font-size: 14px;
+  }
+
+  .coursecard .detail-course .number-of-lessions{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #8a8787;
+    font-size: 12px;
+  }
+
+  .coursecard .detail-course .total-time{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #8a8787;
+    font-size: 12px;
+  }
