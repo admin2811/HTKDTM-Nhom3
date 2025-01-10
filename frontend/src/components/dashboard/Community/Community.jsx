@@ -67,11 +67,57 @@ const Community = () => {
         <div className='postes'>
           <h1>Cộng đồng thảo luận</h1>
 
-          {/* Hiển thị bài viết nhúng */}
-          <div className="fb-post"
-               data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid0T1FDVjHyYiRDwZ7h1aJ8c5jke1ni1ik7SbL9tQ3Awrpjnx3D6vLo7r47qp9Msk28l&id=61571560507383"
-               data-width="500">
+          {/* Hiển thị các bài viết nhúng */}
+          <div className="fb-posts-container">
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                  data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid0T1FDVjHyYiRDwZ7h1aJ8c5jke1ni1ik7SbL9tQ3Awrpjnx3D6vLo7r47qp9Msk28l&id=61571560507383"
+                  data-width="1500px">
+              </div>
+            </div>
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                  data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid0367EM4Yj3KNvKmhpFfLn7nNPiMLms4AYRuGRXk5Hxmq8Dw2DWCge23GxpEsXHhHcpl&id=61571560507383"
+                  data-width="1500px">
+              </div>
+            </div>
+
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                data-href="https://www.facebook.com/hocieltscungprep/posts/pfbid02JiinZEqey79K8bzA6hKAYtSrRdoSn9sr24z1qR2T8F3MXbz9FZTN9stGnHpwXgu1l"
+                data-width="1500px">
+              </div>
+            </div>
+
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                data-href="https://www.facebook.com/hocieltscungprep/posts/pfbid0Rf3zH6BYWpifdh9gcFzcJiAmMwN8FDPWWUMngWiwevBjN7Qk2HnFoyRmVuK5Fbi3l"
+                data-width="1500px">
+              </div>
+            </div>
+
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid0fz99RPiTQYVucNDJUZvVypc3Waa5ZdoXwGz7ZvAwr5kPzYAmLKt5AE88h5YdTbKQl&id=61566967260978"
+                data-width="1500px">
+              </div>
+            </div>
+
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid02BmxJmoNq9AmKBaNSGqJ6caemzVEnMtpbF545kmHsG1rePXY7MFnvK2w3bMTtnXYzl&id=61566967260978"
+                data-width="1500px">
+              </div>
+            </div>
+
+            <div className="fb-post-wrapper">
+              <div className="fb-post"
+                data-href="https://www.facebook.com/permalink.php?story_fbid=pfbid0oY5EU6CiAgSuyqjSH7gRh9RqGKrXdGAvt1QEWHMqtHnUM6hX1cso4rhn79ug1fytl&id=61566967260978"
+                data-width="1500px">
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

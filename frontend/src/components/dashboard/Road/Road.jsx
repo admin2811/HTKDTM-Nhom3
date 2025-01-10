@@ -55,7 +55,7 @@ async function getToken() {
     console.log(supersetApiUrl + '/guest_token/')
     console.log(guest_token_body)
     console.log(guest_token_headers)
-    await axios.post(supersetApiUrl + 'guest_token/', guest_token_body, guest_token_headers)
+    await axios.post(supersetApiUrl + '/guest_token/', guest_token_body, guest_token_headers)
     .then(dt => {
         console.log(dt.data['token'])
         embedDashboard({
@@ -80,13 +80,34 @@ async function getToken() {
 }
 
 
-function Road() {
+// function Road() {
 
-    getToken()
+//     getToken()
+
+//     return (
+//         <div className="App">
+//         <div id='superset-container'></div> 
+//         </div>
+//     );
+// }
+
+function Road() {
+    useEffect(() => {
+        // Gọi hàm getToken một lần sau khi component được render
+        getToken();
+    }, []); // [] đảm bảo useEffect chỉ chạy một lần khi component mount
 
     return (
         <div className="App">
-        <div id='superset-container'></div> // Here Superset is going to be embedded
+            {/* Iframe để hiển thị dashboard cụ thể */}
+            <iframe
+                width="100%"
+                height="600"
+                seamless
+                frameBorder="0"
+                scrolling="no"
+                src="http://ec2-3-106-58-241.ap-southeast-2.compute.amazonaws.com/superset/dashboard/p/a8RrWgorJgx/"
+            ></iframe>
         </div>
     );
 }

@@ -50,3 +50,22 @@ h1 {
     text-align: center;
   }
 }
+
+.fb-posts-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Căn chỉnh các bài viết theo chiều dọc từ trên xuống */
+  align-items: stretch; /* Đảm bảo các bài viết chiếm hết chiều rộng của container */
+  margin: 0 auto;
+  width: 100%; /* Đảm bảo container chiếm hết chiều rộng */
+}
+
+.fb-post {
+  width: 100%; /* Đảm bảo các bài viết chiếm hết chiều rộng của container */
+  max-width: 1500px; /* Giới hạn chiều rộng tối đa nếu cần thiết */
+  margin: 0 auto; /* Căn giữa bài viết nếu nó nhỏ hơn chiều rộng của container */
+  padding: 10px;
+}
+
+
+
