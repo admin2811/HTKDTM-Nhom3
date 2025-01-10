@@ -2,8 +2,65 @@ import React, { useRef, useState } from 'react'
 import './Quiz.css'
 import {data} from './data'
 import { useNavigate } from "react-router-dom";
+import { Bar, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
+
+// Đăng ký các thành phần của chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+);
+
+import { dataChart } from './dataChart';
 
 function Quiz() {
+
+    const data_bieuDoCot = {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        datasets: [
+          {
+            label: '1',
+            data: Object.values(dataChart).filter(value => value !== "id_course"), // Use values for the chart data
+            backgroundColor: '#1FA8C9',
+            borderColor: '#1FA8C9',
+            borderWidth: 1,
+            
+          },
+        ],
+    };
+    
+    const options_bieuDoCot = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+        },
+        scales: {
+            y: {
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 20,  // Đặt khoảng cách giữa các giá trị là 20
+                },
+            },
+            
+        },
+    };
+    
 
     let [index, setIndex] = useState(0);
     let [question, setQuestion] = useState(data[index]);
@@ -30,6 +87,7 @@ function Quiz() {
                 setLock(true);
                 setScore(prev => prev + 1);  // Tăng điểm khi trả lời đúng
                 savedData[index + 1] = "correct"; // Lưu kết quả đúng
+                savedData.correctCount = (savedData.correctCount || 0) + 1; // Tăng số câu đúng
             } else {
                 e.target.classList.add("wrong");
                 savedData[index + 1] = "wrong"; // Lưu kết quả sai
@@ -38,6 +96,9 @@ function Quiz() {
                 // option_array.find(option => option.current.textContent === question.ans).current.classList.add("correct");
                 option_array[question.ans.charCodeAt(0) - 65].current.classList.add("correct");
             }
+
+             // Cập nhật tổng điểm (số câu đúng / tổng số câu * 10)
+            savedData.totalScore = (savedData.correctCount / data.length) * 10;
 
             // Lưu dữ liệu cập nhật vào localStorage
             localStorage.setItem("quizResult", JSON.stringify(savedData));
@@ -95,6 +156,13 @@ function Quiz() {
         
         {result?<>
             <h2>Bạn đã đúng được {score} trên {data.length} câu</h2>
+
+            <div className="profile-shortcut">
+                <h3 className="text-l font-semibold">Tỷ lệ làm đúng của các câu</h3>
+                {/* <div id='superset-container'></div>  */}
+                <Bar data={data_bieuDoCot} options={options_bieuDoCot} />
+            </div>
+
             <div className="flex justify-between gap-2">
                 <button onClick={reset}>Làm lại</button>
                 <button onClick={back}>Quay về</button>
