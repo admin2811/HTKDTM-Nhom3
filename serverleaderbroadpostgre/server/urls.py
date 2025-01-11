@@ -19,5 +19,11 @@ urlpatterns = [
     path('lessons/<int:course_id>/', views.lessons_of_course, name='lessons_of_course'),
     path('api/', include(router.urls)),
     path('api/predict-learning-path/', PredictLearningPath.as_view(), name='predict_learning_path'),
-    path('api/evaluate_mark/', views.evaluate_mark, name='evaluate_mark'),
+    path('quizz/<int:lesson_id>/', views.quizz_of_lesson, name='quizz_of_lesson'),
+    path('api/create_payment_link', views.create_payment, name='create_payment'),
+    path('api/transcribeByUrl', views.transcribe_video_api, name='transcribe_video_by_url'),
+    path('register_course', views.register_user_course, name='register_course'),
+    path('post_result', views.update_result_user_course, name='post_result'),
+    path('api/evaluate_mark', views.evaluate_mark, name='evaluate_mark'),
+    path('api/draw_chart_1', views.draw_chart_1, name='post_result'),
 ]

@@ -1,7 +1,16 @@
-
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
 # Pyre type checker
+.env
+.pyre/
 tmp
 *.sqlite3
+Dockerfile
+fly.toml
+tmp
+.dockerignore
 .venv
-server/google_read_data.py
+
+gitignore

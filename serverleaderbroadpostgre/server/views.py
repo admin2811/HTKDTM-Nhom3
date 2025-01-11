@@ -4,7 +4,7 @@ from .controller import get_users_data, add_user_data, predict_learning_path
 from django.views.decorators.csrf import csrf_exempt # type: ignore
 import json
 from django.core.exceptions import ValidationError
-from .models import Course
+from .models import Course, Quizz, UserCourse
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -20,14 +20,84 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from server.models import UserInfo
 from django.utils.encoding import smart_bytes,smart_str
-from django.db.models import Avg
 from .serializers import UserRegisterSerializer, UserLoginSerializer, RouterSerializer
 from .recommend_course import RecommendCourse
 import pandas as pd
 from datetime import timedelta
 import json
-from .models import Course, Lesson, Router, UserCourse
+from .models import Course, Lesson, Router
+from payos import PaymentData, PayOS
+import os
+from rest_framework.decorators import api_view
+import random
+from django.views.decorators.csrf import csrf_exempt
+import yt_dlp
+import whisper
+import torch
+import os
 from .apps import rdf
+from django.db.models import Avg
+from .supersetchart import superset_host, username, password, chart_id, get_chart_data
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="whisper")
+warnings.filterwarnings("ignore", category=FutureWarning, module="torch")
+
+# Cấu hình yt-dlp
+yt_dlp_opts = {
+    'outtmpl': 'output.mp4',   # Đặt tên tệp tải về là 'output.mp4'
+    'format': 'best',          # Tải video và âm thanh tốt nhất
+    'noplaylist': True,
+    'continue': True,
+}
+
+# Hàm tải video từ YouTube
+def download_video(url):
+    try:
+        with yt_dlp.YoutubeDL(yt_dlp_opts) as ydl:
+            ydl.download([url])
+    except Exception as e:
+        print(f"Error downloading video: {e}")
+        return False
+    return True
+
+# Hàm chuyển đổi video thành văn bản
+def transcribe_video(model_name):
+    try:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        model = whisper.load_model(model_name).to(device)  # Tải mô hình Whisper
+        result = model.transcribe("output.mp4")  # Chuyển đổi âm thanh trong video thành văn bản
+        return result['text']
+    except Exception as e:
+        print(f"Error transcribing video: {e}")
+        return None
+
+# API nhận URL và trả về bản ghi âm
+@csrf_exempt
+def transcribe_video_api(request):
+    if request.method == "POST":
+        # Lấy URL từ request
+        url = request.POST.get('videoUrl')
+        print(url)
+        if url:
+
+            if download_video(url):
+                transcription_result = transcribe_video("base")  # Model 'base' là một mô hình nhỏ, có thể thay đổi
+                if transcription_result:
+                    return JsonResponse({'status': 'success', 'transcription': transcription_result})
+                else:
+                    return JsonResponse({'status': 'error', 'message': 'Error transcribing video'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Error downloading video'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'No URL provided'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+payOS = PayOS(
+    client_id=os.environ.get('PAY_OS_CLIENT'),
+    api_key=os.environ.get('PAYOS_API_KEY'),
+    checksum_key=os.environ.get('PAYOS_CHECKSUM_KEY')
+)
 
 class RegisterView(APIView):
     def post(self, request):
@@ -125,6 +195,125 @@ def home(request):
     return HttpResponse('Welcome to server postgreSQL')
 
 @csrf_exempt
+def register_user_course(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+
+        user_name = data.get('user_name')
+        course_id = data.get('course_id')
+
+        try:
+            # Lấy người dùng theo username
+            user = UserInfo.objects.get(username=user_name)
+            course = Course.objects.get(id=course_id)
+        
+            if UserCourse.objects.filter(user=user, course=course).exists():
+                return JsonResponse({"error": "User already enrolled in this course."}, status=400)
+
+            user_course = UserCourse(
+                user=user,
+                course=course,
+            )
+            user_course.save()
+
+            return JsonResponse({"message": "User course registered successfully."}, status=201)
+
+        except UserInfo.DoesNotExist:
+            return JsonResponse({"error": "User not found."}, status=404)
+        except Course.DoesNotExist:
+            return JsonResponse({"error": "Course not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+@csrf_exempt
+def update_result_user_course(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+
+        user_name = data.get('user_name')
+        course_id = data.get('course_id')
+        result = data.get('result')
+
+        try:
+            user = UserInfo.objects.get(username=user_name)
+            user_course = UserCourse.objects.get(user=user, course_id=course_id)
+
+            total_questions = Quizz.objects.filter(id_lesson__id=course_id).count()
+
+            print(total_questions)
+
+            calculated_result = (result / total_questions) * 10
+
+            user_course.result = calculated_result
+            user_course.save()
+
+            return JsonResponse({"message": "User course result updated successfully."}, status=200)
+
+        except UserInfo.DoesNotExist:
+            return JsonResponse({"error": "User not found."}, status=404)
+        except UserCourse.DoesNotExist:
+            return JsonResponse({"error": "User course not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+@csrf_exempt
+def evaluate_mark(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            user_name = body.get('user_name')
+
+            # Kiểm tra user_name
+            if not user_name:
+                return JsonResponse({"error": "Username is required."}, status=400)
+
+            try:
+                user = UserInfo.objects.get(username=user_name)
+            except UserInfo.DoesNotExist:
+                return JsonResponse({"error": "User not found."}, status=404)
+
+            user_language = user.language if user.language else None
+            if not user_language:
+                return JsonResponse({"error": "User does not have a language set."}, status=400)
+
+            user_courses = UserCourse.objects.filter(user=user)
+            matching_courses = user_courses.filter(course__language__iexact=user_language)
+
+            if not matching_courses.exists():
+                return JsonResponse({"message": "No courses match the user's language."}, status=200)
+
+            average_result = matching_courses.aggregate(average_result=Avg('result'))['average_result']
+
+            user_language = user_language.lower()
+
+            data_test = pd.DataFrame({
+                "avg_score": [average_result],
+                "target_language": [user_language]
+            })
+
+            predicted_rank = rdf.predict(data_test)
+
+            response_data = {
+                "user_name": user_name,
+                "average_result": average_result,
+                "predicted_rank": predicted_rank[0]
+            }
+
+            return JsonResponse({
+                "message": "Recommended course",
+                "data": response_data
+            }, status=200)
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@csrf_exempt
 def fetch_users_data(request):
     if request.method == "GET":
         users = get_users_data()
@@ -172,7 +361,7 @@ def read_courses(request):
     recommender = RecommendCourse(user_data)
     print(recommender.read_data_train())
 
-    return HttpResponse('Đọc cái con cặc')
+    return HttpResponse('Success')
 
 @csrf_exempt
 def create_courses(request):
@@ -239,60 +428,34 @@ def lessons_of_course(request, course_id):
         lessons = Lesson.objects.filter(id_course_id=course_id)
         lessons_data = list(lessons.values())
         return JsonResponse({'lessons': lessons_data}, safe=False)
-    
 @csrf_exempt
-def evaluate_mark(request):
-    global rdf
-    if request.method == "POST":
-        try:
-            body = json.loads(request.body.decode('utf-8'))
-            user_id = body.get('user_id')
+def quizz_of_lesson(request, lesson_id):
+    if request.method == "GET":
+        quizz = Quizz.objects.filter(id_lesson_id=lesson_id)
+        quizz_data = list(quizz.values())
+        return JsonResponse({'quizz': quizz_data}, safe=False)
 
-            # Kiểm tra user_id
-            if not user_id:
-                return JsonResponse({"error": "User ID is required."}, status=400)
+@api_view(['POST'])
+def create_payment(request):
+    domain = "http://localhost:5173/"
+    try:
+        paymentData = PaymentData(
+            orderCode=random.randint(1000, 99990),
+            amount=10000,
+            description="demo",
+            cancelUrl=f"{domain}/dashboard",
+            returnUrl=f"{domain}/dashboard"
+        )
+        payosCreatPayment = payOS.cancelPaymentLink(paymentData)
+        return Response(payosCreatPayment.to_json())
+    except Exception as e:
+        return Response({'error': str(e)}, status=403)
 
-            try:
-                # Lấy thông tin user
-                user = UserInfo.objects.get(id=user_id)
-            except UserInfo.DoesNotExist:
-                return JsonResponse({"error": "User not found."}, status=404)
 
-            # Lấy ngôn ngữ của user
-            user_language = user.language if user.language else None
-            if not user_language:
-                return JsonResponse({"error": "User does not have a language set."}, status=400)
+def draw_chart_1(request):
+    if request.method == "GET":
+        data = get_chart_data(chart_id, superset_host, username, password)
 
-            # Lấy các khóa học phù hợp
-            user_courses = UserCourse.objects.filter(user=user)
-            matching_courses = user_courses.filter(course__language__iexact=user_language)
+        return JsonResponse({"message": "Query chart successfully.", "data": data}, status=200)
 
-            if not matching_courses.exists():
-                return JsonResponse({"message": "No courses match the user's language."}, status=200)
-
-            # Tính result trung bình
-            average_result = matching_courses.aggregate(average_result=Avg('result'))['average_result']
-
-            user_language = user_language.lower()
-
-            data_test = pd.DataFrame({
-                "avg_score": [average_result],
-                "target_language": [user_language]
-            })
-
-            predicted_rank = rdf.predict(data_test)
-
-            reponse_data = {
-                "user_id": user_id,
-                "average_result": average_result,
-                "predicted_rank": predicted_rank[0]
-            }
-
-            return JsonResponse({
-                "message": "Recommended course",
-                "data": reponse_data
-            }, status=200)
-        
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({"error": "Invalid request method."}, status=405)
+    return JsonResponse({"error": "Error."}, status=400)

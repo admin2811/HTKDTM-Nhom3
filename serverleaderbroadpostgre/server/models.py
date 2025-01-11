@@ -24,6 +24,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #         return self.create_user(username, email, password, **extra_fields)
 
 class UserInfo(AbstractBaseUser,PermissionsMixin):
+    id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
@@ -73,6 +74,7 @@ class UserInfo(AbstractBaseUser,PermissionsMixin):
 #         return self.name
     
 class Course(models.Model):
+    id = models.BigAutoField(primary_key=True)
     course_name = models.CharField(max_length=255)
     description = models.TextField()
     image = CloudinaryField('image', blank=True, null=True)  # Trường hình ảnh sử dụng Cloudinary
@@ -124,3 +126,12 @@ class Quizz(models.Model):
 
     def __str__(self):
         return self.question
+    
+class QuestionResult(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_course = models.CharField(max_length=255)
+    question_number = models.CharField(max_length=255)
+    result = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.id_course} - Question {self.question_number} - {self.result}"

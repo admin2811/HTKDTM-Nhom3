@@ -27,6 +27,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
     username=serializers.CharField(max_length=255)
     field = serializers.CharField(max_length=255, read_only=True)
     language = serializers.CharField(max_length=255, read_only=True)
@@ -36,7 +37,7 @@ class UserLoginSerializer(serializers.Serializer):
     refresh_token=serializers.CharField(max_length=255, read_only=True)
     class Meta:
         model=UserInfo
-        fields=['username', 'password', 'access_token', 'refresh_token', 'field', 'language','level']
+        fields=['id', 'username', 'password', 'access_token', 'refresh_token', 'field', 'language','level']
     def validate(self, attrs):
         password=attrs.get('password')
         username=attrs.get('username')
@@ -50,8 +51,8 @@ class UserLoginSerializer(serializers.Serializer):
             raise AuthenticationFailed("Account is not active")
         tokens=user.tokens()
         return {
+            'user_id': user.id,
             'username':user.username,
-            'full_name':user.get_full_name,
             'field': user.field,
             'language':user.language,
             'level':user.level,
