@@ -5,7 +5,7 @@ import { CohereClient } from 'cohere-ai'
 
 const FormSection = () => {
     const cohere = new CohereClient({
-        token: "STwjcOQ4QPWRBBw1ztnbOVUZBfsnF9HQicsVzi2U"
+        token: "wqTgBWBhOoI9Ufc6BjyH9ksus6eRa2Dp7pXZzT5l"
     })
     const [formData, setFormData] = useState({
         target: "",
@@ -14,14 +14,13 @@ const FormSection = () => {
         language: "",
         study: ""
     })
-    
     const [predictedPath, setPredictedPath] = useState('');
     const [aiResponse, setAiResponse] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const getDetailedPathFromAI = async (path) => {
         try {
           const response = await cohere.generate({
-            model: 'command-xlarge-nightly', 
+            model: 'command-xlarge', 
             prompt: `Hãy cung cấp một lộ trình chi tiết và link video cho: ${path}, kết nối tất cả các phần lại với nhau trong một câu văn liền mạch, đừng tách thành các câu riêng biệt. Hãy luôn luôn bắt đầu với phần giới thiệu: "Dưới đây là một vài bài học trong các khoá học của tôi, hãy tham khảo và học theo nhé!"`,
             max_tokens: 3000,
           });

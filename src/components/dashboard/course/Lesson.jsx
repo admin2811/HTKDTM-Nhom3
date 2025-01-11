@@ -167,11 +167,11 @@ function LessonJava() {
       </div>
     );
   }
-  const splitIntoSentences = (text) => {
-    return text.split(/[.!?]\s+/).map((sentence, index) => (
-      <p key={index}>{sentence.trim()}</p>
-    ));
-  };
+  // const splitIntoSentences = (text) => {
+  //   return text.split(/[.!?]\s+/).map((sentence, index) => (
+  //     <p key={index}>{sentence.trim()}</p>
+  //   ));
+  // };
 
   return (
     <div className="w-full h-screen bg-gray-50 p-6 rounded-lg shadow-lg flex">
@@ -254,7 +254,7 @@ function LessonJava() {
               <h3 className="font-bold text-lg">Tóm tắt bài học:</h3>
               <div className="text-gray-700">
                 {/* Hiển thị các câu đã được chia thành các đoạn riêng biệt */}
-                {transcription ? splitIntoSentences(transcription) : <p>Chưa có nội dung.</p>}
+                {transcription}
               </div>
             </div>
           )}

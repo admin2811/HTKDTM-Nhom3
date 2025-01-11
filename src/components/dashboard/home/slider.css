@@ -2,70 +2,106 @@
 
 /* Slider container */
 .slider-section {
-    width: 100%;
-    height: 220px; /* Tăng chiều cao để phù hợp với ảnh */
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
+  width: 100%;
+  height: 220px; /* Tăng chiều cao để phù hợp với ảnh */
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* Slide styles */
+.slider-section .slide {
+  transition: transform ease-in-out 0.24s; /* Chuyển động mượt */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Arrow styles */
+.slider-section .arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: white;
+  z-index: 2;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.slider-section .arrow:hover {
+  color: #fff; /* Hiệu ứng khi hover */
+}
+
+.slider-section .arrow.left {
+  left: 20px;
+}
+
+.slider-section .arrow.right {
+  right: 20px;
+}
+
+/* Dots */
+.slider-section .dots {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+}
+
+.slider-section .dot {
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.slider-section .dot.active {
+  background-color: #fff; /* Đổi màu cho dot được chọn */
+}
+
+/* Sidebar and content layout adjustments */
+
+/* Basic layout for smaller screens */
+.sidebar {
+  display: none; /* Ẩn sidebar trên các màn hình nhỏ */
+}
+
+.content {
+  width: 100%; /* Chiếm toàn bộ không gian */
+}
+
+/* Medium screens (tablets and above) */
+@media (min-width: 768px) {
+  .sidebar {
+    display: block; /* Hiển thị sidebar trên màn hình từ tablet trở lên */
+    width: 250px; /* Thiết lập chiều rộng của sidebar */
   }
-  
-  /* Slide styles */
-  .slider-section .slide {
-    transition: transform ease-in-out 0.24s; /* Chuyển động mượt */
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    background-position: center;
+
+  .content {
+    margin-left: 250px; /* Dành không gian cho sidebar */
+    width: calc(100% - 250px); /* Thu nhỏ content để không tràn ra ngoài */
   }
-  
-  /* Arrow styles */
-  .slider-section .arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 40px;
-    color: white;
-    z-index: 2;
-    cursor: pointer;
-    transition: color 0.3s;
+}
+
+/* Large screens (desktops, 4K screens) */
+@media (min-width: 1920px) {
+  .sidebar {
+    display: block; /* Hiển thị sidebar trở lại trên màn hình 4K */
+    width: 300px; /* Tăng chiều rộng của sidebar trên màn hình lớn */
   }
-  
-  .slider-section .arrow:hover {
-    color: #fff; /* Hiệu ứng khi hover */
+
+  .content {
+    margin-left: 300px; /* Dành không gian cho sidebar lớn */
+    width: calc(100% - 300px); /* Thu nhỏ content để không tràn ra ngoài */
   }
-  
-  .slider-section .arrow.left {
-    left: 20px;
-  }
-  
-  .slider-section .arrow.right {
-    right: 20px;
-  }
-  
-  /* Dots */
-  .slider-section .dots {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-  }
-  
-  .slider-section .dot {
-    width: 12px;
-    height: 12px;
-    margin: 0 5px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .slider-section .dot.active {
-    background-color: #fff; /* Đổi màu cho dot được chọn */
-  }
-  
+}

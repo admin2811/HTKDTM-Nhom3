@@ -49,7 +49,7 @@ const AIResult = () => {
     try {
       // Truyền các thông số từ API để gửi tới Cohere
       const response = await cohere.generate({
-        model: 'command-xlarge-nightly', // Lựa chọn mô hình Cohere
+        model: 'command-xlarge', // Lựa chọn mô hình Cohere
         prompt: `Dựa trên kết quả trung bình của học viên: ${result.data.average_result}, 
                               xếp hạng dự đoán: ${result.data.predicted_rank}, 
                               và tên người dùng của họ: ${result.data.user_name}, 

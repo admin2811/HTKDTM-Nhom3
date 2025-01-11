@@ -4,8 +4,8 @@ import background from '../../assets/img/orange-pattern.jpg'
 import { Link } from 'react-router-dom';
 const Course = () => {
   return (
-    <div>
-      <div className="w-1/2 mx-auto">
+    <div className='container w-full'>
+      <div className="w-full max-w-3xl mx-auto">
         <h1 className="font-bold text-3xl mt-16 ml-20">Lộ trình học tập</h1>
         <p className="mt-20 ml-20">Để bắt đầu một cách thuận lợi, bạn nên tập trung vào một lộ trình học. Ví dụ: Để đi làm với vị trí &quot;Lập trình viên Front-end&quot; bạn nên tập trung vào lộ trình &quot;Front-end&quot;.</p>
       </div>
@@ -15,7 +15,7 @@ const Course = () => {
             <div className="flex-col">
               <h2 className="text-3xl font-bold">Lộ trình học Front-end</h2>
               <p className="mt-10 text-xl leading-6">
-              Lập trình viên Front-end là người xây dựng ra giao diện websites. Trong phần này F8 sẽ chia sẻ cho bạn lộ trình để trở thành lập trình viên Front-end nhé.
+                Lập trình viên Front-end là người xây dựng ra giao diện websites. Trong phần này F8 sẽ chia sẻ cho bạn lộ trình để trở thành lập trình viên Front-end nhé.
               </p>
             </div>
             <div className="flex items-center pl-6">

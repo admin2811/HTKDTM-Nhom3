@@ -3,7 +3,8 @@ import './Quizz.css';
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from '../common/loading/Loading';
 import { dataChart } from './dataChart';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+import axios from 'axios';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,9 +13,8 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement,
 } from 'chart.js';
-
+import waitGif from '../../../assets/img/wait.gif';
 // Đăng ký các thành phần của chart.js
 ChartJS.register(
   CategoryScale,
@@ -23,8 +23,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement,
 );
+
 function Quiz() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -33,25 +33,46 @@ function Quiz() {
     let username = '';
     if (dataStorage) {
         const parsedData = JSON.parse(dataStorage);
-        username = parsedData.username;  // In ra 'test1'
+        username = parsedData.username;
     } else {
         console.log("No data found");
     }
-    console.log(id);
+
+    const [chartData, setChartData] = useState(null);
+    const [error, setError] = useState(null);
+    
+
+   const [showChart, setShowChart] = useState(false);
+
+
+   useEffect(() => {
+       const timer = setTimeout(() => setShowChart(true), 2000);
+       return () => clearTimeout(timer);
+   });
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:5000/api/draw_chart_1')
+            .then((response) => {
+                setChartData(response.data.data);
+            })
+            .catch((error) => {
+                setError(error.toString());
+            });
+    }, []);
+
     const data_bieuDoCot = {
         labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         datasets: [
-          {
-            label: '1',
-            data: Object.values(dataChart).filter(value => value !== "id_course"), // Use values for the chart data
-            backgroundColor: '#1FA8C9',
-            borderColor: '#1FA8C9',
-            borderWidth: 1,
-            
-          },
+            {
+                label: '1',
+                data: Object.values(dataChart).filter(value => value !== "id_course"),
+                backgroundColor: '#1FA8C9',
+                borderColor: '#1FA8C9',
+                borderWidth: 1,
+            },
         ],
     };
-    
+
     const options_bieuDoCot = {
         responsive: true,
         plugins: {
@@ -63,21 +84,19 @@ function Quiz() {
             y: {
                 ticks: {
                     beginAtZero: true,
-                    stepSize: 20,  // Đặt khoảng cách giữa các giá trị là 20
+                    stepSize: 20,
                 },
             },
-            
         },
     };
-    // Fetch data function
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const response = await fetch(`http://127.0.0.1:5000/quizz/${id}/`);
             if (response.ok) {
                 const result = await response.json();
-                console.log(result);
-                setData(result.quizz || []);  // Set quizz data
+                setData(result.quizz || []);
             } else {
                 console.error("Failed to fetch lessons");
             }
@@ -89,7 +108,7 @@ function Quiz() {
     }, [id]);
 
     useEffect(() => {
-        fetchData();  // Call fetchData when the id changes
+        fetchData();
     }, [id, fetchData]);
 
     const [index, setIndex] = useState(0);
@@ -104,11 +123,8 @@ function Quiz() {
     const Option4 = useRef(null);
 
     const option_array = [Option1, Option2, Option3, Option4];
+    const question = data[index] || {};
 
-    // Only set the question if data is available and index is within range
-    const question = data[index] || {};  // Default to empty object if undefined
-
-    // Ensure that the question is not undefined before rendering
     const checkAns = (e, ans) => {
         if (!lock) {
             const savedData = JSON.parse(localStorage.getItem("quizResult")) || { id_course: question.id_course };
@@ -135,7 +151,7 @@ function Quiz() {
         if (lock) {
             if (index === data.length - 1) {
                 setResult(true);
-                handlePostResult();  // Gọi hàm gửi kết quả lên server
+                handlePostResult();
                 return;
             }
 
@@ -159,7 +175,6 @@ function Quiz() {
         navigate("/dashboard");
     };
 
-    // Gửi kết quả bài kiểm tra lên server
     const handlePostResult = async () => {
         if (id && username) {
             try {
@@ -171,12 +186,12 @@ function Quiz() {
                     body: JSON.stringify({
                         course_id: id,
                         user_name: username,
-                        result: score,  // Gửi tổng số câu đúng
+                        result: score,
                     }),
                 });
 
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     console.log("Successfully posted result:", result);
                 } else {
@@ -189,7 +204,6 @@ function Quiz() {
             console.log("Missing id or username");
         }
     };
-
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -219,8 +233,17 @@ function Quiz() {
             </>}
             <div className="profile-shortcut">
                 <h3 className="text-l font-semibold">Tỷ lệ làm đúng của các câu</h3>
-                {/* <div id='superset-container'></div>  */}
-                <Bar data={data_bieuDoCot} options={options_bieuDoCot} />
+                {result ? (
+                    !showChart ? (
+                        <div>
+                           <img src={waitGif} alt="Đang tải" width="600" />
+                       </div>
+                    ) : (
+                        <Bar data={data_bieuDoCot} options={options_bieuDoCot} />
+                    )
+                ) : (
+                    <p>Hoàn thành bài kiểm tra để xem biểu đồ.</p>
+                )}
             </div>
             <div className="flex justify-between gap-2">
                 <button onClick={reset}>Làm lại</button>

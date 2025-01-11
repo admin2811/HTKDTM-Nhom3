@@ -40,7 +40,7 @@ function CourseCardPayement(props) {
                 <p className='time'>{props.total_time}</p>
               </div>
             </div>
-            <Link  className="btn-learn" to='https://pay.payos.vn/web/d8851396409545058e2ec1dd19247572' target="_blank">
+            <Link  className="btn-learn" to='https://pay.payos.vn/web/da634d9e57364680afdbd74ca20af746' target="_blank">
                 <button onClick={createPaymentLink}>{props.category === 'vip' ? 'Mua Ngay' : 'Học Ngay'}</button>
             </Link>
           </div>
