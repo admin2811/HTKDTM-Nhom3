@@ -81,6 +81,27 @@ function LessonHtmlcss() {
     },
   };
 
+   const saveProgressToBackend = async (userId, lessonId, completedLessons) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/user-progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id, lessonId, completedLessons }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save progress");
+      }
+
+      const result = await response.json();
+      console.log("Progress saved:", result);
+    } catch (error) {
+      console.error("Error saving progress:", error);
+    }
+  };
+
   // Cập nhật số bài đã học khi thay đổi bài học
   const handleLessonChange = (lesson) => {
     setSelectedLesson(lesson);
